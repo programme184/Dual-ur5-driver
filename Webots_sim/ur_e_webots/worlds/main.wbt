@@ -1,0 +1,27 @@
+#VRML_SIM R2020b utf8
+WorldInfo {
+  coordinateSystem "NUE"
+}
+Viewpoint {
+  orientation 0.21495429070868577 -0.9095415617766154 -0.3557088701549081 4.1639207272920675
+  position 2.6295569566530608 2.732154148608427 -0.8559209687058935
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+UR5e {
+  hidden position_0_0 -9.54153805636743e-05
+  hidden rotation_1 0 0 -1 9.541538270729178e-05
+  hidden position_1_0 5.717749411694184e-05
+  hidden rotation_2 0 1 0 1.5708531774941166
+  hidden position_2_0 1.5863537579364755e-05
+  hidden rotation_3 0 1 0 1.5863544135755236e-05
+  hidden position_3_0 -6.530287061030152e-06
+  hidden rotation_4 0 1 0 1.570789469712939
+  hidden position_4_0 4.110136554483342e-07
+  hidden rotation_5 0 0 1 4.107966647175028e-07
+  hidden position_5_0 -4.11418568171975e-07
+  hidden rotation_6 0 -1 0 4.1187628987685676e-07
+  controller "<extern>"
+}
