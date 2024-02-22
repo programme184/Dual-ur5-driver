@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<launch>
+  <include file = "$(find dual_ur5_driver)/launch/load_dual_description.launch"/>
+  <!--right's arguments-->
+  <arg name="right_kinematics" default="$(find ur_description)/config/ur5/default_kinematics.yaml"/>
+  <arg name="right_controller_config_file" default="$(find dual_ur5_driver)/config/right_controllers.yaml"/>
+  <arg name="right_ip" default="192.168.8.100"/>
+  <arg default="192.168.8.10" name="reverse_ip"/>
+  <arg name="right_reverse_port" default="50001"/>
+  <arg name="right_script_sender_port" default="50002"/>
+  <arg name="right_trajectory_port" default="50003"/>
+  <arg name="right_script_command_port" default="50004"/>
+
+  <!--left's arguments-->
+  <arg name="left_kinematics" default="$(find ur_description)/config/ur5/default_kinematics.yaml"/>
+  <arg name="left_controller_config_file" default="$(find dual_ur5_driver)/config/left_controllers.yaml"/>
+  <arg name="left_ip" default="192.168.8.200"/>
+  <arg name="left_reverse_port" default="60001"/>
+  <arg name="left_script_sender_port" default="60002"/>
+  <arg name="left_trajectory_port" default="60003"/>
+  <arg name="left_script_command_port" default="60004"/>
+
+  <!--common arguments-->
+  <arg name="use_tool_communication" default="false"/>
+  <arg name="controllers" default="joint_state_controller scaled_pos_joint_traj_controller speed_scaling_state_controller force_torque_sensor_controller" doc="Controllers that are activated by default."/>
+  <arg name="stopped_controllers" default="pos_joint_traj_controller joint_group_vel_controller" doc="Controllers that are initally loaded, but not started."/>
+
+  <include file="$(find dual_ur5_driver)/launch/load_dual_description.launch">
+    <arg name="left_kinematics" value="$(arg left_kinematics)"/>
+    <arg name="right_kinematics" value="$(arg right_kinematics)"/>
+  </include>
+
+  <group ns="right">
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+
+    <include file="$(find ur_robot_driver)/launch/ur_control.launch">
+      <arg name="use_tool_communication" value="$(arg use_tool_communication)"/>
+      <arg name="controller_config_file" value="$(arg right_controller_config_file)"/>
+      <arg name="robot_ip" value="$(arg right_ip)"/>
+      <arg name="reverse_port" value="$(arg right_reverse_port)"/>
+      <arg name="script_sender_port" value="$(arg right_script_sender_port)"/>
+      <arg name="trajectory_port" value="$(arg right_trajectory_port)"/>
+      <arg name="kinematics_config" value="$(arg right_kinematics)"/>
+      <arg name="tf_prefix" value="right_"/>
+      <arg name="controllers" value="$(arg controllers)"/>
+      <arg name="stopped_controllers" value="$(arg stopped_controllers)"/>
+    </include>
+  </group>
+
+  <group ns="left">
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+
+    <include file="$(find dual_ur5_driver)/launch/ur_control.launch">
+      <arg name="use_tool_communication" value="$(arg use_tool_communication)"/>
+      <arg name="controller_config_file" value="$(arg left_controller_config_file)"/>
+      <arg name="robot_ip" value="$(arg left_ip)"/>
+      <arg name="reverse_port" value="$(arg left_reverse_port)"/>
+      <arg name="script_sender_port" value="$(arg left_script_sender_port)"/>
+      <arg name="trajectory_port" value="$(arg left_trajectory_port)"/>
+      <arg name="kinematics_config" value="$(arg left_kinematics)"/>
+      <arg name="tf_prefix" value="left_"/>
+      <arg name="controllers" value="$(arg controllers)"/>
+      <arg name="stopped_controllers" value="$(arg stopped_controllers)"/>
+    </include>
+  </group>
+
+  <!--Convenience stuff for demo purposes-->
+
+  <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find dual_ur5_driver)/config/view_robot.rviz" required="true" /> -->
+  
+  <!-- <node name="rqt_joint_trajectory_controller" pkg="rqt_joint_trajectory_controller" type="rqt_joint_trajectory_controller" respawn="false" output="screen"> 
+  </node> -->
+
+  <!-- Run the main MoveIt executable with trajectory execution -->
+    <include file="$(find dual_ur5_moveit_config)/launch/move_group.launch">
+        <arg name="allow_trajectory_execution" value="true" />
+        <arg name="moveit_controller_manager" value="ros_control" />
+        <arg name="fake_execution_type" value="interpolate" />
+        <arg name="info" value="true" />
+        <arg name="debug" value="false" />
+        <arg name="pipeline" value="ompl" />
+        <arg name="load_robot_description" value="true" />
+    </include>
+    
+    <!-- Start the simulated robot in an empty Gazebo world -->
+    <!-- <include file="$(find panda_multiple_arms)/launch/view_panda_multiple_arms_empty_world.launch" /> -->
+
+    <!-- Start the controllers and robot state publisher-->
+    <!-- <include file="$(find dual_ur5_moveit_config)/launch/controller_utils.launch"/>
+    <include file="$(find dual_ur5_moveit_config)/launch/ros_controllers.launch"/> -->
+
+    <!-- Start moveit_rviz with the motion planning plugin -->
+    <include file="$(find dual_ur5_moveit_config)/launch/moveit_rviz.launch">
+        <arg name="rviz_config" value="$(find dual_ur5_moveit_config)/launch/moveit.rviz" />
+    </include>
+</launch>
