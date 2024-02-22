@@ -18,7 +18,7 @@ http://wiki.ros.org/webots_ros
 2. Connect ros and webots
 
 ```
-	roslaunch ur5e.launch
+roslaunch ur_e_webots ur5e.launch
 ```
 
 3. Control ur5 by setting joint values
