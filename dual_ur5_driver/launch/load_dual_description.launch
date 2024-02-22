@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<launch>
-  <arg name="left_kinematics" default="$(find ur_description)/config/ur5/default_kinematics.yaml"/>
-  <arg name="right_kinematics" default="$(find ur_description)/config/ur5/default_kinematics.yaml"/>
-  <param name="robot_description" command="$(find xacro)/xacro '$(find dual_ur5_driver)/launch/dual_ur5.xacro'
-   right_kinematics:=$(arg right_kinematics)
-   left_kinematics:=$(arg left_kinematics)
-  "/>
-</launch>
